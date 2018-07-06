@@ -1,3 +1,4 @@
+let wasm;
 export function init(wasmIn) {
     wasm = wasmIn;
 }
