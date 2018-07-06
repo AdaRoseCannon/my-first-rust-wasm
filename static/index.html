@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script type="module">
+        import * as helloWorldBindGenHelper from './js_hello_world.js';
+        (async function main() {
+            const wasm = await WebAssembly.instantiateStreaming(
+                fetch('./wasm.wasm'),
+                {
+                    'env': {
+                        'memoryBase': 0,
+                        'tableBase': 0,
+                        'memory': new WebAssembly.Memory({initial: 256}),
+                        'table': new WebAssembly.Table({initial: 0, element: 'anyfunc'}),
+                    },
+                    './js_hello_world': helloWorldBindGenHelper
+                }
+            );
+            helloWorldBindGenHelper.init(wasm.instance.exports);
+            helloWorldBindGenHelper.greet('Ada Test');
+        }());
+    </script>
+</body>
+</html>
